@@ -16,6 +16,9 @@
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 
+#include <boost/lexical_cast.hpp>
+#include <iostream>
+
 namespace fnordmetric {
 namespace metricdb {
 
@@ -151,7 +154,28 @@ void HTTPAPI::insertSample(
   }
 
   auto metric = metric_repo_->findOrCreateMetric(metric_key);
-  metric->insertSample(sample_value, labels);
+
+  // get optional timestap from user & pass to insert sample
+  uint64_t timestamp = 0;
+  std::string timestamp_str;
+  if(util::URI::getParam(params, "timestamp", &timestamp_str)){
+    // str to timestamp
+    timestamp = boost::lexical_cast<uint64_t>(timestamp_str);
+
+    env()->logger()->printf(
+        "DEBUG",
+        "timestamp: %s",
+        timestamp_str.c_str());
+
+    env()->logger()->printf(
+        "DEBUG",
+        "timestamp: %llu",
+        (long long unsigned) timestamp);
+  }
+
+  env()->logger()->printf("DEBUG", "TEST");
+
+  metric->insertSample(sample_value, labels, timestamp);
   response->setStatus(http::kStatusCreated);
 }
 

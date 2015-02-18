@@ -18,7 +18,8 @@ IMetric::~IMetric() {}
 
 void IMetric::insertSample(
     double value,
-    const std::vector<std::pair<std::string, std::string>>& labels) {
+    const std::vector<std::pair<std::string, std::string>>& labels,
+    uint64_t timestamp) {
   // FIXPAUL slow slow slow!
   for (int i1 = 0; i1 < labels.size(); ++i1) {
     for (int i2 = 0; i2 < labels.size(); ++i2) {
@@ -31,8 +32,9 @@ void IMetric::insertSample(
     }
   }
 
-  insertSampleImpl(value, labels);
+  insertSampleImpl(value, labels, timestamp);
 }
+
 
 const std::string& IMetric::key() const {
   return key_;

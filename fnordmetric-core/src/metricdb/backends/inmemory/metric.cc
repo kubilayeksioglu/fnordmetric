@@ -25,7 +25,8 @@ Metric::Metric(
 
 void Metric::insertSampleImpl(
     double value,
-    const std::vector<std::pair<std::string, std::string>>& labels) {
+    const std::vector<std::pair<std::string, std::string>>& labels,
+    uint64_t timestamp) {
 
   {
     std::lock_guard<std::mutex> lock_holder(labels_mutex_);
@@ -37,8 +38,11 @@ void Metric::insertSampleImpl(
   {
     std::lock_guard<std::mutex> lock_holder(values_mutex_);
     last_insert_time_ = WallClock::unixMicros();
+    if (timestamp == 0){
+      timestamp = last_insert_time_;
+    }
     MemSample sample = {
-      .time = DateTime(last_insert_time_),
+      .time = DateTime(timestamp),
       .value = value,
       .labels = labels};
 

@@ -117,7 +117,8 @@ std::shared_ptr<MetricSnapshot> Metric::getOrCreateSnapshot() {
 
 void Metric::insertSampleImpl(
     double value,
-    const std::vector<std::pair<std::string, std::string>>& labels) {
+    const std::vector<std::pair<std::string, std::string>>& labels,
+    uint64_t timestamp) {
   SampleWriter writer(&token_index_);
   writer.writeValue(value);
   for (const auto& label : labels) {
@@ -130,9 +131,14 @@ void Metric::insertSampleImpl(
   auto& table = snapshot->tables().back();
 
   uint64_t now = fnord::util::WallClock::unixMicros();
-  table->addSample(&writer, now);
+  if (timestamp == 0){
+    timestamp = now;
+  }
+
+  table->addSample(&writer, timestamp);
   last_insert_ = now;
 }
+
 
 // FIXPAUL misnomer...it creates a new snapshot + appends a new, clean table
 std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {

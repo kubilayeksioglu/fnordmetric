@@ -59,7 +59,8 @@ public:
 protected:
   void insertSampleImpl(
       double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) override;
+      const std::vector<std::pair<std::string, std::string>>& labels,
+      uint64_t timestamp = 0) override;
 
   std::shared_ptr<MetricSnapshot> getSnapshot() const;
   std::shared_ptr<MetricSnapshot> getOrCreateSnapshot();

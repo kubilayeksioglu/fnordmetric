@@ -40,7 +40,8 @@ protected:
 
   void insertSampleImpl(
       double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) override;
+      const std::vector<std::pair<std::string, std::string>>& labels,
+      uint64_t timestamp = 0) override;
 
   struct MemSample {
     DateTime time;

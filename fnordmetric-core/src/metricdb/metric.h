@@ -29,7 +29,8 @@ public:
 
   void insertSample(
       double value,
-      const std::vector<std::pair<std::string, std::string>>& labels);
+      const std::vector<std::pair<std::string, std::string>>& labels,
+      uint64_t timestamp = 0);
 
   virtual void scanSamples(
       const fnord::util::DateTime& time_begin,
@@ -46,7 +47,8 @@ protected:
 
   virtual void insertSampleImpl(
       double value,
-      const std::vector<std::pair<std::string, std::string>>& labels) = 0;
+      const std::vector<std::pair<std::string, std::string>>& labels,
+      uint64_t timestamp) = 0;
 
   const std::string key_;
 };
